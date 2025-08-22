@@ -31,6 +31,8 @@ jobs:
         run: |
           sudo snap install snapcraft --classic
           sudo usermod -aG lxd $USER
+          sudo lxd init --auto
+          newgroup lxd
 
       - name: Build snap
         run: snapcraft pack
