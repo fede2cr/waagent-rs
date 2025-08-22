@@ -60,12 +60,6 @@ jobs:
       - name: Install Snapcraft
         run: sudo snap install snapcraft --classic
 
-      - name: Authenticate with Snap Store
-        env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-        run: |
-          snapcraft login
-
       - name: Push Snap to Store
         run: snapcraft push ./snap-${{ matrix.arch }}/*.snap --release=stable
 
