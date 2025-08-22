@@ -35,7 +35,9 @@ jobs:
           newgrp lxd
 
       - name: Build snap
-        run: snapcraft pack
+        run: |
+          newgrp lxd
+          snapcraft pack
 
       - name: Upload snap artifact
         uses: actions/upload-artifact@v4
