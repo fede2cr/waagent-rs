@@ -1,0 +1,23 @@
+name: waagent-rs
+version: 0.1.0
+summary: Azure Agent in rust
+description: |
+  The Azure Agent is a port of waagent in rust. It is multiplatform and does not run as root.
+base: core24
+grade: stable
+confinement: strict
+parts:
+  waagent-rs:
+    plugin: rust
+    build-packages:
+      - libssl-dev
+    source-type: git
+    source: https://github.com/waagent-rs/waagent-rs
+apps:
+  waagent-rs:
+    command: waagent-rs-poc
+    daemon: simple
+    restart-condition: always
+    plugs:
+      - network
+      - network-bind
