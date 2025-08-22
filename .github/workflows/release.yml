@@ -37,6 +37,7 @@ jobs:
       - name: Build snap
         run: |
           newgrp lxd
+          groups
           snapcraft pack
 
       - name: Upload snap artifact
