@@ -30,6 +30,8 @@ jobs:
       - name: Install Snapcraft
         run: |
           sudo snap install snapcraft --classic
+          sudo snap install rustup --classic
+
 
       - name: Build snap
         run: |
