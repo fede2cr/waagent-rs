@@ -47,6 +47,8 @@ jobs:
     name: Release Snap to Snap Store
     needs: build-snap
     runs-on: ubuntu-latest
+    env:
+      SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
     strategy:
       matrix:
         arch: [x86_64, aarch64]
@@ -62,8 +64,7 @@ jobs:
 
       - name: Authenticate with Snap Store
         run: |
-          echo "${{ secrets.SNAPCRAFT_LOGIN }}" > snap-login.json
-          snapcraft login --with snap-login.json
+          snapcraft login
 
       - name: Push Snap to Store
         run: snapcraft push ./snap-${{ matrix.arch }}/*.snap --release=stable
