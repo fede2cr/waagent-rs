@@ -30,7 +30,7 @@ jobs:
       - name: Install Snapcraft
         run: |
           sudo snap install snapcraft --classic
-          sudo usermod -aG lxd $USER
+          sudo usermod -aG lxd runner
           sudo lxd init --auto
           newgrp lxd
 
