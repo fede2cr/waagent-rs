@@ -32,13 +32,10 @@ jobs:
           sudo snap install snapcraft --classic
           sudo usermod -aG lxd runner
           sudo lxd init --auto
-          newgrp lxd
 
       - name: Build snap
         run: |
-          newgrp lxd
-          groups
-          snapcraft pack
+          sg lxd -c "snapcraft pack"
 
       - name: Upload snap artifact
         uses: actions/upload-artifact@v4
