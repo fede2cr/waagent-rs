@@ -47,6 +47,8 @@ jobs:
     name: Release Snap to Snap Store
     needs: build-snap
     runs-on: ubuntu-latest
+    env:
+      SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
     strategy:
       matrix:
         arch: [x86_64, aarch64]
@@ -61,8 +63,6 @@ jobs:
         run: sudo snap install snapcraft --classic
 
       - name: Push Snap to Store
-        env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
         run: |
           snapcraft upload ./snap-${{ matrix.arch }}/*.snap --release=stable
 
