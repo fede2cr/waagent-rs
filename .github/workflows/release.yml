@@ -64,4 +64,4 @@ jobs:
 
       - name: Push Snap to Store
         run: |
-          snapcraft upload ./snap-${{ matrix.arch }}/*.snap fede2cr-waagent-rs --release=stable
+          snapcraft upload ./snap-${{ matrix.arch }}/*.snap --snaps fede2cr-waagent-rs --release=stable
