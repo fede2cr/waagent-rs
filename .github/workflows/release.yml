@@ -64,9 +64,4 @@ jobs:
 
       - name: Push Snap to Store
         run: |
-          snapcraft upload ./snap-${{ matrix.arch }}/*.snap --release=stable
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ./artifacts/**/*.rpm
+          snapcraft upload ./snap-${{ matrix.arch }}/*.snap fede2cr-waagent-rs --release=stable
