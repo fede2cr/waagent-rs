@@ -56,19 +56,19 @@ jobs:
           name: waagent-rs-${{ matrix.arch }}-rpm
           path: ${{ steps.find_rpm.outputs.rpm_path }}
 
-  release-rpm:
-    needs: build-rpm
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: ./artifacts
+#  release-rpm:
+#    needs: build-rpm
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download all artifacts
+#        uses: actions/download-artifact@v4
+#        with:
+#          path: ./artifacts
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ./artifacts/**/*.rpm
+#      - name: Create Release
+#        uses: softprops/action-gh-release@v2
+#        with:
+#          files: ./artifacts/**/*.rpm
 
 
   build-snap:
@@ -138,8 +138,8 @@ jobs:
 #          name: waagent-rs_${{ matrix.arch }}-snap
 #          path: ${{ steps.find_snap.outputs.snap_path }}
 
-  release-snap:
-    needs: build-snap
+  release-files:
+    needs: build-snap, build-rpm
     #needs: upload-snap
     runs-on: ubuntu-latest
     steps:
@@ -151,5 +151,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: ./artifacts/**/*.snap
+          files: |
+            ./artifacts/**/*.snap
+            ./artifacts/**/*.rpm
 
