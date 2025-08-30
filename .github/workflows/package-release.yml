@@ -77,7 +77,7 @@ jobs:
 
       - name: Build snap
         run: |
-          snapcraft pack --verbosity debug --destructive-mode --target-arch=${{ matrix.arch }}
+          snapcraft pack --verbosity debug --destructive-mode --platform=${{ matrix.arch }}
 
       - name: Upload snap artifact
         uses: actions/upload-artifact@v4
