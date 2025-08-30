@@ -103,21 +103,21 @@ jobs:
           name: waagent-rs_${{ matrix.arch }}-snap
           path: ./*.snap
 
-  upload-snap:
-    name: Release Snap to Snap Store
-    needs: build-snap
-    runs-on: ubuntu-latest
-    env:
-      SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-    strategy:
-      matrix:
-        arch: [x86_64, aarch64]
-    steps:
-      - name: Download Snap artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: waagent-rs_${{ matrix.arch }}-snap
-          path: ./snap-${{ matrix.arch }}
+#  upload-snap:
+#    name: Release Snap to Snap Store
+#    needs: build-snap
+#    runs-on: ubuntu-latest
+#    env:
+#      SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+#    strategy:
+#      matrix:
+#        arch: [x86_64, aarch64]
+#    steps:
+#      - name: Download Snap artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: waagent-rs_${{ matrix.arch }}-snap
+#          path: ./snap-${{ matrix.arch }}
 
       #- name: Install Snapcraft
       #  run: sudo snap install snapcraft --classic
@@ -126,20 +126,21 @@ jobs:
       #  run: |
       #    snapcraft upload ./snap-${{ matrix.arch }}/*.snap --snaps fede2cr-waagent-rs --release=stable
 
-      - name: Find built snap
-        id: find_snap
-        run: |
-          SNAP_PATH=$(find . -name "*${{ matrix.arch }}.snap")
-          echo "snap_path=$SNAP_PATH" >> $GITHUB_OUTPUT
-
-      - name: Upload Snap artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: waagent-rs_${{ matrix.arch }}-snap
-          path: ${{ steps.find_snap.outputs.snap_path }}
+#      - name: Find built snap
+#        id: find_snap
+#        run: |
+#          SNAP_PATH=$(find . -name "*${{ matrix.arch }}.snap")
+#          echo "snap_path=$SNAP_PATH" >> $GITHUB_OUTPUT
+#
+#      - name: Upload Snap artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: waagent-rs_${{ matrix.arch }}-snap
+#          path: ${{ steps.find_snap.outputs.snap_path }}
 
   release-snap:
-    needs: upload-snap
+    needs: build-snap
+    #needs: upload-snap
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
