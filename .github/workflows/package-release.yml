@@ -56,27 +56,12 @@ jobs:
           name: waagent-rs-${{ matrix.arch }}-rpm
           path: ${{ steps.find_rpm.outputs.rpm_path }}
 
-#  release-rpm:
-#    needs: build-rpm
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Download all artifacts
-#        uses: actions/download-artifact@v4
-#        with:
-#          path: ./artifacts
-
-#      - name: Create Release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          files: ./artifacts/**/*.rpm
-
-
   build-snap:
     name: Build Snap for ${{ matrix.arch }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch: [x86_64, aarch64]
+        platforms: [x86_64, aarch64]
 
     steps:
       - name: Checkout repository
@@ -103,40 +88,6 @@ jobs:
           name: waagent-rs_${{ matrix.arch }}-snap
           path: ./*.snap
 
-#  upload-snap:
-#    name: Release Snap to Snap Store
-#    needs: build-snap
-#    runs-on: ubuntu-latest
-#    env:
-#      SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
-#    strategy:
-#      matrix:
-#        arch: [x86_64, aarch64]
-#    steps:
-#      - name: Download Snap artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: waagent-rs_${{ matrix.arch }}-snap
-#          path: ./snap-${{ matrix.arch }}
-
-      #- name: Install Snapcraft
-      #  run: sudo snap install snapcraft --classic
-
-      #- name: Push Snap to Store
-      #  run: |
-      #    snapcraft upload ./snap-${{ matrix.arch }}/*.snap --snaps fede2cr-waagent-rs --release=stable
-
-#      - name: Find built snap
-#        id: find_snap
-#        run: |
-#          SNAP_PATH=$(find . -name "*${{ matrix.arch }}.snap")
-#          echo "snap_path=$SNAP_PATH" >> $GITHUB_OUTPUT
-#
-#      - name: Upload Snap artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: waagent-rs_${{ matrix.arch }}-snap
-#          path: ${{ steps.find_snap.outputs.snap_path }}
 
   release-files:
     needs: [build-snap, build-rpm]
