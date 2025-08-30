@@ -100,10 +100,10 @@ jobs:
       - name: Upload snap artifact
         uses: actions/upload-artifact@v4
         with:
-          name: waagent-rs-${{ matrix.arch }}-snap
+          name: waagent-rs_${{ matrix.arch }}-snap
           path: ./*.snap
 
-  release_rpm:
+  upload_snap:
     name: Release Snap to Snap Store
     needs: build-snap
     runs-on: ubuntu-latest
@@ -116,11 +116,11 @@ jobs:
       - name: Download Snap artifact
         uses: actions/download-artifact@v4
         with:
-          name: waagent-rs-${{ matrix.arch }}
+          name: waagent-rs_${{ matrix.arch }}-snap
           path: ./snap-${{ matrix.arch }}
 
-      - name: Install Snapcraft
-        run: sudo snap install snapcraft --classic
+      #- name: Install Snapcraft
+      #  run: sudo snap install snapcraft --classic
 
       #- name: Push Snap to Store
       #  run: |
@@ -135,11 +135,11 @@ jobs:
       - name: Upload Snap artifact
         uses: actions/upload-artifact@v4
         with:
-          name: waagent-rs_${{ matrix.arch }}
+          name: waagent-rs_${{ matrix.arch }}-snap
           path: ${{ steps.find_snap.outputs.snap_path }}
 
   release_snap:
-    needs: build-snap
+    needs: upload-snap
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
