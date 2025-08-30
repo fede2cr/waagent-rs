@@ -57,7 +57,7 @@ jobs:
           path: ${{ steps.find_rpm.outputs.rpm_path }}
 
   build-snap:
-    name: Build Snap for ${{ matrix.arch }}
+    name: Build Snap for ${{ matrix.platform }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -85,7 +85,7 @@ jobs:
       - name: Upload snap artifact
         uses: actions/upload-artifact@v4
         with:
-          name: waagent-rs_${{ matrix.arch }}-snap
+          name: waagent-rs_${{ matrix.platform }}-snap
           path: ./*.snap
 
 
