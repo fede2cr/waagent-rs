@@ -6,6 +6,9 @@ description: |
 base: core24
 grade: stable
 confinement: strict
+architectures:
+  - amd64
+  - arm64
 parts:
   waagent-rs:
     plugin: rust

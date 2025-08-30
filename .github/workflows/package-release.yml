@@ -59,26 +59,18 @@ jobs:
   build-snap:
     name: Build Snap for ${{ matrix.arch }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch: [x86_64, arm64]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Qemu for multi arch
-        uses: docker/setup-qemu-action@v3
-
       - name: Build snap
         uses: snapcore/action-build@v1
-        with:
-          snapcraft-args: "--target-arch=${{ matrix.arch }}"
 
       - name: Upload snap artifact
         uses: actions/upload-artifact@v4
         with:
-          name: waagent-rs_${{ matrix.arch }}-snap
+          name: waagent-rs_snap
           path: ./*.snap
 
 
