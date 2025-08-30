@@ -58,7 +58,7 @@ jobs:
           name: waagent-rs-${{ matrix.arch }}
           path: ${{ steps.find_rpm.outputs.rpm_path }}
 
-  release:
+  release-rpm:
     needs: build-rpm
     runs-on: ubuntu-latest
     steps:
@@ -72,10 +72,6 @@ jobs:
         with:
           files: ./artifacts/**/*.rpm
 
-#Change log
-#    Wed Aug 27 2025 Mitch Tenorio (mitenori@microsoft.com)
-#
-name: Build and Release Packages
 
   build-snap:
     name: Build Snap for ${{ matrix.arch }}
