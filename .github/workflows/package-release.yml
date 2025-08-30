@@ -1,0 +1,161 @@
+name: Build and Release waagent-rs RPM
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-rpm:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [x86_64, aarch64]
+        include:
+          - arch: x86_64
+            container: mcr.microsoft.com/azurelinux/base/core:3.0
+            rpm_arch: x86_64
+          - arch: aarch64
+            container: mcr.microsoft.com/azurelinux/base/core:3.0
+            rpm_arch: aarch64
+
+    container:
+      image: ${{ matrix.container }}
+
+    steps:
+      - name: Install build dependencies
+        run: |
+          # Import Azure Linux GPG key for package verification
+          rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-azurelinux
+          GNUPGHOME=/root/.gnupg tdnf -y update
+          GNUPGHOME=/root/.gnupg tdnf -y install rpmdevtools gcc ca-certificates pkg-config openssl-devel kernel-headers binutils glibc-devel
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare RPM build environment
+        run: |
+          rpmdev-setuptree
+          cp rpm/*.spec ~/rpmbuild/SPECS/
+          spectool -C ~/rpmbuild/SOURCES/ -g ~/rpmbuild/SPECS/waagent-rs.spec
+
+      - name: Build RPM
+        run: |
+          rpmbuild -ba ~/rpmbuild/SPECS/*.spec --target ${{ matrix.rpm_arch }}
+
+      - name: Find built RPM
+        id: find_rpm
+        run: |
+          RPM_PATH=$(find ~/rpmbuild/RPMS -name "*.rpm" | grep -v debuginfo | head -n 1)
+          echo "rpm_path=$RPM_PATH" >> $GITHUB_OUTPUT
+
+      - name: Upload RPM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: waagent-rs-${{ matrix.arch }}
+          path: ${{ steps.find_rpm.outputs.rpm_path }}
+
+  release:
+    needs: build-rpm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./artifacts/**/*.rpm
+
+#Change log
+#    Wed Aug 27 2025 Mitch Tenorio (mitenori@microsoft.com)
+#
+name: Build and Release Packages
+
+  build-snap:
+    name: Build Snap for ${{ matrix.arch }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [x86_64, aarch64]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Qemu for multi arch
+        uses: docker/setup-qemu-action@v3
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install Snapcraft
+        run: |
+          sudo snap install snapcraft --classic
+          sudo snap install rustup --classic
+
+
+      - name: Build snap
+        run: |
+          snapcraft pack --verbosity debug --destructive-mode
+
+      - name: Upload snap artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: waagent-rs-${{ matrix.arch }}
+          path: ./*.snap
+
+  release_rpm:
+    name: Release Snap to Snap Store
+    needs: build-snap
+    runs-on: ubuntu-latest
+    env:
+      SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_CREDENTIALS }}
+    strategy:
+      matrix:
+        arch: [x86_64, aarch64]
+    steps:
+      - name: Download Snap artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: waagent-rs-${{ matrix.arch }}
+          path: ./snap-${{ matrix.arch }}
+
+      - name: Install Snapcraft
+        run: sudo snap install snapcraft --classic
+
+      #- name: Push Snap to Store
+      #  run: |
+      #    snapcraft upload ./snap-${{ matrix.arch }}/*.snap --snaps fede2cr-waagent-rs --release=stable
+
+      - name: Find built snap
+        id: find_snap
+        run: |
+          SNAP_PATH=$(find . -name "*.snap")
+          echo "snap_path=$SNAP_PATH" >> $GITHUB_OUTPUT
+
+      - name: Upload Snap artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: waagent-rs_${{ matrix.arch }}
+          path: ${{ steps.find_snap.outputs.snap_path }}
+
+  release_snap:
+    needs: build-snap
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./artifacts/**/*.snap
+
