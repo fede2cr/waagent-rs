@@ -139,7 +139,7 @@ jobs:
 #          path: ${{ steps.find_snap.outputs.snap_path }}
 
   release-files:
-    needs: build-snap, build-rpm
+    needs: [build-snap, build-rpm]
     #needs: upload-snap
     runs-on: ubuntu-latest
     steps:
