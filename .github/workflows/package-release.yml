@@ -103,7 +103,7 @@ jobs:
           name: waagent-rs_${{ matrix.arch }}-snap
           path: ./*.snap
 
-  upload_snap:
+  upload-snap:
     name: Release Snap to Snap Store
     needs: build-snap
     runs-on: ubuntu-latest
@@ -138,7 +138,7 @@ jobs:
           name: waagent-rs_${{ matrix.arch }}-snap
           path: ${{ steps.find_snap.outputs.snap_path }}
 
-  release_snap:
+  release-snap:
     needs: upload-snap
     runs-on: ubuntu-latest
     steps:
