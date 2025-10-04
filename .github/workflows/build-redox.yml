@@ -16,7 +16,7 @@ jobs:
       id: build
       run: |
         sudo DEBIAN_FRONTEND=noninteractive apt-get update
-        sudo DEBIAN_FRONTEND=noninteractive apt-get -y -qq install rustup pkg-config libssl-dev
+        sudo DEBIAN_FRONTEND=noninteractive apt-get -y -qq install rustup pkg-config libssl-dev libfuse3-dev
         rustup toolchain install stable
 
     - name: Install Redoxer
