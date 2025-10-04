@@ -18,12 +18,14 @@ jobs:
         sudo DEBIAN_FRONTEND=noninteractive apt-get update
         sudo DEBIAN_FRONTEND=noninteractive apt-get -y -qq install rustup pkg-config libssl-dev libfuse3-dev
         rustup toolchain install stable
+        rustup target add x86_64-unknown-redox
+
 
     - name: Install Redoxer
       run: cargo install redoxer
 
     - name: Setup Redox toolchain
-      run: redoxer toolchain
+      run: redoxer toolchain --update
 
     - name: Build for Redox
       run: redoxer build
