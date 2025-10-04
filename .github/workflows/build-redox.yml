@@ -1,0 +1,34 @@
+name: Build for Redox
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      id: build
+      run: |
+        sudo DEBIAN_FRONTEND=noninteractive apt-get update
+        sudo DEBIAN_FRONTEND=noninteractive apt-get -y -qq install rustup pkg-config libssl-dev
+        rustup toolchain install stable
+
+    - name: Install Redoxer
+      run: cargo install redoxer
+
+    - name: Setup Redox toolchain
+      run: redoxer toolchain
+
+    - name: Build for Redox
+      run: redoxer build
+
+    - name: Check result (temp)
+      run: |
+        ls -lh target/x86_64-unknown-redox/release
+
