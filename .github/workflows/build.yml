@@ -32,5 +32,6 @@ jobs:
           cargo --quiet check
           cargo test
           cargo audit
+          cargo clippy
           cargo --quiet build --release
           ls -lha target/release
