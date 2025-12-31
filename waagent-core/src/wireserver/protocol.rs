@@ -21,7 +21,7 @@ const WIRESERVER_API_VERSION: &str = "2012-11-30";
 const HOSTGAPLUGIN_API_VERSION: &str = "2015-09-01";
 
 /// Fetch the current goal state from WireServer
-pub async fn fetch_goal_state(client: &Client, agent_name: &str, agent_version: &str) -> Result<GoalState> {
+pub async fn fetch_goal_state(client: &Client) -> Result<GoalState> {
     let response_result = client
         .get(format!("{}/machine?comp=goalstate", WIRESERVER_ENDPOINT))
         .header("x-ms-version", WIRESERVER_API_VERSION)

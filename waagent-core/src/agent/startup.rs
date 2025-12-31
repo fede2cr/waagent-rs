@@ -21,7 +21,7 @@ type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 /// Returns the initial goal state for use by the heartbeat loop
 pub async fn initialize_agent(client: &Client) -> Result<GoalState> {
     // Fetch goal state
-    let goal_state = fetch_goal_state(client, AGENT_NAME, AGENT_VERSION).await?;
+    let goal_state = fetch_goal_state(client).await?;
     
     // Send health report
     send_health_report(client, &goal_state, AGENT_NAME, AGENT_VERSION).await?;

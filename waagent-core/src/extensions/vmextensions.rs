@@ -1,5 +1,4 @@
 use reqwest::Client;
-use crate::wireserver::GoalState;
 use crate::extensions::process_run_command_native;
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
@@ -9,8 +8,6 @@ type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 pub async fn process_vmextensions_from_vmsettings(
     client: &Client,
     vm_settings: &serde_json::Value,
-    goal_state: &GoalState,
-    agent_name: &str,
 ) -> Result<Vec<serde_json::Value>> {
     let mut all_extension_statuses: Vec<serde_json::Value> = Vec::new();
     

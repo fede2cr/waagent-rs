@@ -28,7 +28,7 @@ pub async fn run_heartbeat_loop(client: &Client, goal_state: &GoalState) -> Resu
         sleep(Duration::from_secs(HEARTBEAT_INTERVAL_SECS)).await;
 
         // Re-fetch the goal state before each heartbeat/telemetry event
-        let latest_goal_state = match fetch_goal_state(client, AGENT_NAME, AGENT_VERSION).await {
+        let latest_goal_state = match fetch_goal_state(client).await {
             Ok(gs) => {
                 if cfg!(debug_assertions) || heartbeat_count % 10 == 0 {
                     println!("Goal state incarnation: {}", gs.incarnation);
@@ -70,7 +70,7 @@ pub async fn run_heartbeat_loop(client: &Client, goal_state: &GoalState) -> Resu
             match fetch_vmsettings(client, &latest_goal_state, AGENT_NAME).await {
                 Ok(vm_settings) => {
                     // Process extensions from vmSettings
-                    match process_vmextensions_from_vmsettings(client, &vm_settings, &latest_goal_state, AGENT_NAME).await {
+                    match process_vmextensions_from_vmsettings(client, &vm_settings).await {
                         Ok(statuses) => {
                             all_extension_statuses = statuses;
                         }

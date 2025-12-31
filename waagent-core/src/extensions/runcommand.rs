@@ -41,7 +41,7 @@ where
                             // Try optimized decryption with direct certificate access first
                             match decrypt_protected_settings_optimized(protected_data, thumbprint).await {
                                 Ok(decrypted_json) => {
-                                    println!("✅ Successfully decrypted protected settings!");
+                                    println!("Successfully decrypted protected settings!");
                                     println!("Decrypted content: {}", decrypted_json);
                                     
                                     // Try to extract command, but don't fail if protectedSettings is empty
@@ -57,7 +57,7 @@ where
                                     }
                                 }
                                 Err(e) => {
-                                    println!("⚠️  Decryption failed: {}", e);
+                                    println!("Warning: Decryption failed: {}", e);
                                     println!("   Trying fallback with wireserver certificates...");
                                     
                                     // Fallback: try fetching certificates from local store
@@ -65,7 +65,7 @@ where
                                         Ok(certificates) => {
                                             match decrypt_protected_settings(protected_data, thumbprint, &certificates).await {
                                                 Ok(decrypted_json) => {
-                                                    println!("✅ Successfully decrypted with local certificates!");
+                                                    println!("Successfully decrypted with local certificates!");
                                                     match extract_command_from_json(&decrypted_json) {
                                                         Ok(cmd) => {
                                                             command = cmd;
@@ -77,13 +77,13 @@ where
                                                     }
                                                 }
                                                 Err(fallback_e) => {
-                                                    println!("⚠️  Local fallback also failed: {}", fallback_e);
+                                                    println!("Warning: Local fallback also failed: {}", fallback_e);
                                                     // Don't return error - will try publicSettings
                                                 }
                                             }
                                         }
                                         Err(cert_e) => {
-                                            println!("⚠️  Certificate fetch fallback failed: {}", cert_e);
+                                            println!("Warning: Certificate fetch fallback failed: {}", cert_e);
                                             // Don't return error - will try publicSettings
                                         }
                                     }
@@ -193,7 +193,7 @@ fn extract_command_from_json(decrypted_json: &str) -> Result<String> {
                         match String::from_utf8(decoded_bytes) {
                             Ok(decoded_command) => {
                                 let command = decoded_command.trim().to_string();
-                                println!("🎯 Decoded script command: {}", command);
+                                println!("Decoded script command: {}", command);
                                 return Ok(command);
                             }
                             Err(e) => {

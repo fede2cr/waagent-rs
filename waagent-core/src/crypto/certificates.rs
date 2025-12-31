@@ -324,7 +324,6 @@ pub async fn download_and_save_certificates(
     use crate::crypto::{generate_transport_certificate, extract_certificates_from_p7m};
     use std::time::Duration;
     
-    const WIRESERVER_ENDPOINT: &str = "http://168.63.129.16";
     const WIRESERVER_API_VERSION: &str = "2012-11-30";
     
     let certificates_url = &goal_state.container.role_instance_list.role_instance.configuration.certificates;

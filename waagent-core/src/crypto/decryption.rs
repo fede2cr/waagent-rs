@@ -216,7 +216,7 @@ pub fn try_openssl_cms_on_original_data(encrypted_data: &[u8]) -> Option<String>
                             if cfg!(debug_assertions) {
                                 println!("CMS output length: {} bytes", cms_output.len());
                                 
-                                if cms_output.len() > 0 {
+                                if !cms_output.is_empty() {
                                     let preview = &cms_output[..std::cmp::min(32, cms_output.len())];
                                     println!("CMS output preview (hex): {}",
                                             preview.iter().map(|b| format!("{:02x}", b)).collect::<Vec<_>>().join(" "));
@@ -277,7 +277,7 @@ pub fn try_openssl_cms_on_original_data(encrypted_data: &[u8]) -> Option<String>
 /// Helper function to write files with sudo if needed
 pub async fn write_file_with_sudo(file_path: &str, content: &[u8]) -> Result<()> {
     // Try to write normally first
-    if let Ok(_) = std::fs::write(file_path, content) {
+    if std::fs::write(file_path, content).is_ok() {
         return Ok(());
     }
     
@@ -292,7 +292,7 @@ pub async fn write_file_with_sudo(file_path: &str, content: &[u8]) -> Result<()>
     
     // Use sudo to copy the temp file to the target location
     let output = Command::new("sudo")
-        .args(&["cp", &temp_file, file_path])
+        .args(["cp", &temp_file, file_path])
         .output()?;
     
     // Clean up temp file

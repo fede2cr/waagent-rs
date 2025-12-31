@@ -20,7 +20,7 @@ pub async fn download_and_install_extension(
     if mkdir_result.is_err() {
         println!("Creating directory with elevated privileges...");
         let output = Command::new("sudo")
-            .args(&["mkdir", "-p", &extension_dir])
+            .args(["mkdir", "-p", &extension_dir])
             .output()?;
             
         if !output.status.success() {
@@ -72,7 +72,7 @@ pub async fn download_and_install_extension(
         // Extract extension using sudo if needed
         println!("Extracting extension to: {}", extension_dir);
         let unzip_output = Command::new("unzip")
-            .args(&["-o", &zip_path, "-d", &extension_dir])
+            .args(["-o", &zip_path, "-d", &extension_dir])
             .output();
 
         let extract_result = match unzip_output {
@@ -81,7 +81,7 @@ pub async fn download_and_install_extension(
                 // Try with sudo
                 println!("Extracting with elevated privileges...");
                 Command::new("sudo")
-                    .args(&["unzip", "-o", &zip_path, "-d", &extension_dir])
+                    .args(["unzip", "-o", &zip_path, "-d", &extension_dir])
                     .output()
             }
         };
@@ -99,14 +99,14 @@ pub async fn download_and_install_extension(
         let extension_script = format!("{}/enable.py", extension_dir);
         if std::path::Path::new(&extension_script).exists() {
             let chmod_result = Command::new("chmod")
-                .args(&["+x", &extension_script])
+                .args(["+x", &extension_script])
                 .output();
                 
             if chmod_result.is_err() || !chmod_result.as_ref().unwrap().status.success() {
                 // Try with sudo
                 println!("Setting executable permissions with sudo...");
                 Command::new("sudo")
-                    .args(&["chmod", "+x", &extension_script])
+                    .args(["chmod", "+x", &extension_script])
                     .output()?;
             }
         }

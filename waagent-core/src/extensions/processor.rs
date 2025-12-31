@@ -54,7 +54,7 @@ where
     println!("Extensions config XML length: {} bytes", extensions_xml.len());
     
     // Always print first 500 chars to debug parsing issues
-    if extensions_xml.len() > 0 {
+    if !extensions_xml.is_empty() {
         let preview = if extensions_xml.len() > 500 { &extensions_xml[..500] } else { &extensions_xml };
         println!("Extensions config XML preview:\n{}", preview);
     }
@@ -145,8 +145,8 @@ where
                         Err(e) => {
                             let error_msg = e.to_string();
                             if error_msg.contains("Permission denied") {
-                                println!("❌ Extension installation failed: {}", error_msg);
-                                println!("   💡 Make sure sudo is available for privileged operations");
+                                println!("Extension installation failed: {}", error_msg);
+                                println!("   Make sure sudo is available for privileged operations");
                             } else {
                                 eprintln!("Failed to install extension {}: {}", plugin_def.name, e);
                             }

@@ -1,11 +1,5 @@
 // Azure Agent Configuration Constants
 
-/// WireServer endpoint for communicating with Azure host
-pub const WIRESERVER_ENDPOINT: &str = "http://168.63.129.16";
-
-/// Port for HostGAPlugin (modern API endpoint)
-pub const HOSTGAPLUGIN_PORT: u16 = 32526;
-
 /// Agent version string
 pub const AGENT_VERSION: &str = "waagent-rs/0.0.1";
 
