@@ -52,18 +52,19 @@ struct Args {
     #[arg(long, default_value_t = false)]
     show_configuration: bool,
 
-    /// Deprovision the VM (clean up state for image capture). Equivalent to
-    /// `waagent -deprovision` in WALinuxAgent.
+    /// Deprovision the VM (clean up state for image capture). Equivalent
+    /// to `waagent -deprovision` in WALinuxAgent.
     #[arg(long, default_value_t = false)]
     deprovision: bool,
 
-    /// Deprovision and additionally remove the provisioned user account.
-    /// Equivalent to `waagent -deprovision+user`.
-    #[arg(long, default_value_t = false)]
+    /// When combined with `--deprovision`, also remove the provisioned
+    /// user account and home directory. Equivalent to the `+user` modifier
+    /// in `waagent -deprovision+user`. Has no effect on its own.
+    #[arg(long, default_value_t = false, requires = "deprovision")]
     deprovision_user: bool,
 
     /// Skip the interactive y/n confirmation when deprovisioning.
-    #[arg(long, default_value_t = false)]
+    #[arg(long, default_value_t = false, requires = "deprovision")]
     force: bool,
 }
 
@@ -86,7 +87,7 @@ async fn main() -> Result<()> {
         config.show();
     }
 
-    if args.deprovision || args.deprovision_user {
+    if args.deprovision {
         run_deprovision(args.force, args.deprovision_user)?;
     }
 
