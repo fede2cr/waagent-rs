@@ -42,7 +42,7 @@ where
                             match decrypt_protected_settings_optimized(protected_data, thumbprint).await {
                                 Ok(decrypted_json) => {
                                     println!("Successfully decrypted protected settings!");
-                                    println!("Decrypted content: {}", decrypted_json);
+                                    println!("Decrypted protected settings payload successfully");
                                     
                                     // Try to extract command, but don't fail if protectedSettings is empty
                                     match extract_command_from_json(&decrypted_json) {
