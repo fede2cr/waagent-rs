@@ -395,10 +395,10 @@ fn del_lib_dir_files(plan: &mut DeprovisionPlan, config: &Config) {
 fn del_ext_handler_files(plan: &mut DeprovisionPlan, config: &Config) {
     let lib_dir = config_string(config, "Lib.Dir", "/var/lib/waagent");
     let lib = lib_dir.trim_end_matches('/');
-    // Remove well-known per-extension state files via globs. The Python
-    // implementation scans the directory and skips the agent's own folder; we
-    // approximate by globbing for every handler subdirectory and excluding
-    // names that look like agent self-update payloads (`WALinuxAgent-*`).
+    // Remove well-known per-extension state files via globs. Unlike the Python
+    // implementation, this approximation does not scan subdirectories or
+    // exclude agent self-update payload folders such as `WALinuxAgent-*`; it
+    // simply matches the corresponding paths under every handler subdirectory.
     plan.push(DeprovisionAction::RmFiles(vec![
         format!("{}/*/status/*.status", lib),
         format!("{}/*/config/*.settings", lib),
